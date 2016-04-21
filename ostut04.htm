@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Open Space Tutorial 4</title>
+<!-- https://www.ordnancesurvey.co.uk/business-and-government/help-and-support/web-services/os-openspace/tutorials/gazetteer-search.html -->
+<script type="text/javascript"
+src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=insert_your_api_key_here"></script></head>
+<body onload="init()"><script type="text/javascript">
+var osMap;function init(){osMap = new OpenSpace.Map('map');
+//set-up the gazetteer service
+var osGaz = new OpenSpace.Gazetteer;
+/*this can be entered via user input but as an example we will pre-define
+the name that we are searching for */
+var placeStr = "Tideswell";
+//pass any matches of the name to a function(gazOptions)
+var gazArray = osGaz.getLocations(placeStr, gazOptions);}
+function gazOptions(searchVal){
+//in this case there is only one match so we zoom to it, if there are more we can offer them to the user to select
+osMap.setCenter(searchVal[0].location, 7);}</script>
+<h1>Doing a gazetteer search</h1>
+<div id="map" style="width: 500px; height: 300px; border: 1px solid black;"></div></body></html>

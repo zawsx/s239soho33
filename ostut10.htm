@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Open Space Tutorial 10</title>
+<script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=insert_your_api_key_here"></script>
+<script type="text/javascript">// Create a map object variable (osMap) and a boundaryLayer object variable (boundaryLayer).
+var osMap, boundaryLayer;
+function init()   { // Create a new OS OpenSpace map object and pass it to our 'map' element id.
+osMap = new OpenSpace.Map('map');
+boundaryLayer = createBoundaryLayer();// Create a boundary layer with styling, by calling the appropriate function.
+
+osMap.addLayer(boundaryLayer);// Add the boundary layer to the map.
+
+osMap.setCenter(new OpenSpace.MapPoint(450000, 200000), 2);} // Set the centre of the map.
+
+function createBoundaryLayer() {// Set-up default symbolizer and a new style map.
+var symbolizer = OpenLayers.Util.applyDefaults({ }, OpenLayers.Feature.Vector.style["default"]);
+var styleMap = new OpenLayers.StyleMap(symbolizer);
+
+// Define the custom styling.
+var lookup = {
+	"CTY": {fillColor: "green", fillOpacity: 0.6, strokeColor: "white", strokeWidth: 2, strokeOpacity: 0.8} };
+// Add rules to the style map.
+styleMap.addUniqueValueRules("default", "AREA_CODE", lookup);
+
+// Define the boundary layer with the strategies that are required (and with the above styling).
+var boundaryLayer = new OpenSpace.Layer.Boundary("Boundaries", {
+                    strategies: [new OpenSpace.Strategy.BBOX()],
+                    area_code: ["CTY"],
+                    styleMap: styleMap  });
+// Return the boundary layer to where the function was called.
+return boundaryLayer;}</script></head><body onload="init();">
+<h1>Adding a single boundary layer with custom styling</h1>
+<div id="map" style="width: 500px; height: 300px; border: 1px solid black;"></div></body></html>

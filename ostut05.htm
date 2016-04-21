@@ -1,0 +1,14 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Open Space Tutorial 5</title>
+<script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=insert_your_api_key_here"></script></head><body onload="init()">
+<script type="text/javascript">var osMap;
+function init() {osMap = new OpenSpace.Map('map');
+//initialise the postcode service into a variable
+var postcodeService = new OpenSpace.Postcode();
+//pass our input, in this case 'hard-wired', to a function
+postcodeService.getLonLat("S9 5NF", onResult);}
+
+function onResult(postcodeCentre) {/*if found, a MapPoint is passed into this function and the map is centered on it at
+zoom level 10 */
+osMap.setCenter(postcodeCentre, 10);}</script>
+<h1>Find location by postcode or postcode sector</h1>
+<div id="map" style="width: 500px; height: 300px; border: 1px solid black;"></div></body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl"><head profile="http://www.w3.org/2005/10/profile">
+  <title>Html popup menu on map click</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style type="text/css">div.os_popupmenu {background-color: #EEEEFF; width: 15em;}
+div.os_popupmenu div:hover {background-color: #AAAAFF;} div.os_popupmenu a {color: #000000;}</style>
+  <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=YOUR_KEY_HERE"></script>
+  <script type="text/javascript"><!--
+var osMap;var screenOverlay;
+function init() {var tempmarker; osMap = new OpenSpace.Map('map');osMap.setCenter(new OpenSpace.MapPoint(429787,434495), 5);
+// CLICK CONTROL FOR POPUP MENU // Define a clickcontrol to extend the OpenLayers.Control class.
+var clickcontrol = new OpenLayers.Control();
+OpenLayers.Util.extend(clickcontrol, {
+	draw: function () {// The draw method is called when the control is initialized
+		// When mouse is clicked, we want to call the onClick method
+		this.clickhandler = new OpenLayers.Handler.Click(this, {"click": this.onClick}); // possible third argument: {keyMask: OpenLayers.Handler.MOD_SHIFT}
+		this.clickhandler.activate();
+		// If menu is displayed, then other actions cancel it
+		this.reactivatehandler2 = new OpenLayers.Handler.MouseWheel(this, {"up": this.onReactivate, "down": this.onReactivate});
+		this.reactivatehandler = new OpenLayers.Handler.Click(this, {"click": this.onReactivate, "dblclick": this.onReactivate}, 	{'single': true, 'double': true, 'pixelTolerance': null});
+		// Also hide menu already on the start of a drag
+		this.cancelhandler = new OpenLayers.Handler.Drag(this, {"move": this.onCancel}, {'stopDown': false});
+	},
+	onClick: function (event) {// Called when there is a mouseclick on the map and we need to display the html popup menu
+		// The mouse position is converted into a map position via the Map.getLonLatFromViewportPx(). This returns a point in the coordinate system of the map base layer, in our case this is British National Grid.
+		pt = osMap.getLonLatFromViewPortPx(event.xy);
+            
+		// We also display a marker at the point that is clicked
+		tempmarker = osMap.createMarker(new OpenSpace.MapPoint(pt.lon, pt.lat));
+            
+		// Remove previous screenOverlay if it exists
+		if (screenOverlay)  screenOverlay.destroy();
+		// Add new screenoverlay, which contains the popup menu
+		screenOverlay = new OpenSpace.Layer.ScreenOverlay("menu"); screenOverlay.setPosition(event.xy.add(10,-12));
+		screenOverlay.setHTML('<div class="os_popupmenu"><div>Coordinates: '+pt.lon+', '+pt.lat+'</div><div>Maybe a hyperlink here?</div></div>');
+		osMap.addLayer(screenOverlay);this.clickhandler.deactivate();// Dont immediately display a new menu on another click...
+		// ...but cancel the current menu on any action
+		this.cancelhandler.activate(); this.reactivatehandler.activate(); this.reactivatehandler2.activate();},
+		// Hide the currently displayed menu and the temporary marker
+		onCancel: function (event) {
+			if (screenOverlay) screenOverlay.destroy(); osMap.removeMarker(tempmarker); this.cancelhandler.deactivate(); },
+		// Back to normal: reactivate the initial event listener.
+		onReactivate: function (event) {this.onCancel(); // just to be sure
+			this.reactivatehandler.deactivate(); this.reactivatehandler2.deactivate(); this.clickhandler.activate();},  });
+osMap.addControl(clickcontrol);} // Add the clickcontrol to the map
+--></script></head><body onload="init()"> <h1>Html popup menu on map click</h1> 
+<div id="map" style="width: 600px; height: 400px; border: 1px solid black;"></div></body></html>
