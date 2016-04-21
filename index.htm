@@ -1,0 +1,14 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>OpenSpace Tutorial 2</title>
+<script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=2F6DEC09B8A65C07E0530B6CA40AD1A2"></script>
+<!-- <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=2F6DEC09B8A65C07E0530B6CA40AD1A2"></script>-->
+</head><body onload="init()"><script type="text/javascript">var osMap;
+function init() {
+osMap=			new OpenSpace.Map('map');
+osMap.setCenter(new OpenSpace.MapPoint(438760, 114760), 10);
+var markers = 	new OpenLayers.Layer.Markers("Markers"); osMap.addLayer(markers);
+var pos = 		new OpenSpace.MapPoint(438760, 114760);  
+var marker = 	new OpenLayers.Marker(pos); markers.addMarker(marker);}</script>
+<h1><Displaying a marker on a map></h1>
+<div id="map" style="width: 500px; height: 300px; border: 1px solid black;"></div>
+
+</body></html>
